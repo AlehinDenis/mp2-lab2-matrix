@@ -9,6 +9,7 @@
 #define __TMATRIX_H__
 
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -55,7 +56,7 @@ public:
   friend ostream& operator<<(ostream &out, const TVector &v)
   {
     for (int i = 0; i < v.Size; i++)
-      out << v.pVector[i] << ' ';
+      out << setw(6) <<v.pVector[i];
     return out;
   }
 };
@@ -67,7 +68,7 @@ TVector<ValType>::TVector(int s, int si)
 	Size = s;
 	StartIndex = si;
 	pVector = new ValType[Size];
-	for (int i = 0; i < Size; i++) pVector[i] = NULL;
+	for (int i = 0; i < Size; i++) pVector[i] = (ValType)0;
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> //конструктор копирования
@@ -90,6 +91,7 @@ TVector<ValType>::~TVector()
 template <class ValType> // доступ
 ValType& TVector<ValType>::operator[](int pos)
 {
+	pos -= StartIndex;
 	if ((pos < 0) || (pos >= Size)) throw("Wrong index");
     return pVector[pos];
 } /*-------------------------------------------------------------------------*/
@@ -203,8 +205,11 @@ public:
   }
   friend ostream & operator<<( ostream &out, const TMatrix &mt)
   {
-    for (int i = 0; i < mt.Size; i++)
-      out << mt.pVector[i] << endl;
+	  for (int i = 0; i < mt.Size; i++)
+	  {
+			for (int j = mt.Size - i; j < mt.Size; j++) out << setw(6) << 0;
+			out << mt.pVector[i] << endl;
+	  }
     return out;
   }
 };
